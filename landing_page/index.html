@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linko — Direct E2EE Chat & High-Speed P2P Share</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-black: #08080C;
+      --card-black: #111118;
+      --border-stroke: #22222E;
+      --accent-cyan: #00F0FF;
+      --accent-pink: #FF007A;
+      --accent-purple: #9D00FF;
+      --text-main: #FFFFFF;
+      --text-sub: #888894;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-black);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Ambient Background Light Bulbs */
+    .glow-1 {
+      position: absolute;
+      top: -150px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.14) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-2 {
+      position: absolute;
+      top: 600px;
+      left: -150px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 0, 122, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header Bar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border-stroke);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: var(--text-main);
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      background: #FFFFFF;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000000;
+      font-weight: 900;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+
+    .badge-tag {
+      background: var(--card-black);
+      border: 1px solid var(--border-stroke);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-cyan);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 80px 0 60px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--accent-cyan);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #A5A5B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-sub);
+      max-width: 680px;
+      margin: 0 auto 40px;
+    }
+
+    /* Download Buttons Bar */
+    .download-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #FFFFFF;
+      color: #000000;
+      box-shadow: 0 0 24px rgba(0, 240, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 32px rgba(0, 240, 255, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--card-black);
+      color: var(--text-main);
+      border: 1px solid var(--border-stroke);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+    }
+
+    /* How To Use Guide */
+    .guide-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border-stroke);
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-title h2 {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .section-title p {
+      color: var(--text-sub);
+      font-size: 15px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .step-card {
+      background: var(--card-black);
+      border: 1px solid var(--border-stroke);
+      border-radius: 24px;
+      padding: 32px;
+      position: relative;
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .step-card h3 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .step-card p {
+      color: var(--text-sub);
+      font-size: 14px;
+    }
+
+    /* Features Grid */
+    .features-section {
+      padding: 60px 0 100px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--card-black);
+      border: 1px solid var(--border-stroke);
+      border-radius: 22px;
+      padding: 28px;
+    }
+
+    .feature-tag {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+    }
+
+    .feature-card h4 {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      color: var(--text-sub);
+      font-size: 13px;
+    }
+
+    /* Deployment Box */
+    .deploy-box {
+      background: linear-gradient(135deg, rgba(0,240,255,0.1) 0%, var(--card-black) 100%);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 24px;
+      padding: 36px;
+      margin-bottom: 80px;
+    }
+
+    .deploy-box h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .deploy-box p {
+      color: var(--text-sub);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .code-block {
+      background: #000000;
+      border: 1px solid var(--border-stroke);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-family: monospace;
+      color: var(--accent-cyan);
+      font-size: 13px;
+      overflow-x: auto;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-stroke);
+      padding: 32px 0;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+      .hero p {
+        font-size: 15px;
+      }
+      .download-group {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <div class="logo-badge">L</div>
+        <span>LINKO</span>
+      </div>
+      <div class="badge-tag">v0.2 DIRECT E2EE</div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-tag">P2P DIRECT WI-FI & E2EE RELAY</div>
+      <h1>Share Instantly.<br>Disappear Completely.</h1>
+      <p>High-speed direct file transfer, end-to-end encrypted messaging, P2P Night Arcade games, View-Once memory shredding, and 4-digit PIN Secret Safe.</p>
+
+      <div class="download-group">
+        <a href="downloads/Linko-v0.2.apk" class="btn btn-primary" download>
+          📱 Download Android APK
+        </a>
+        <a href="downloads/Linko-v0.2-Setup.exe" class="btn btn-secondary" download>
+          💻 Download Windows EXE
+        </a>
+        <a href="https://linko-chat.vercel.app" class="btn btn-secondary" target="_blank">
+          🌐 Launch Web App
+        </a>
+      </div>
+    </section>
+
+    <!-- How To Use Guide -->
+    <section class="guide-section">
+      <div class="section-title">
+        <h2>How To Use Linko</h2>
+        <p>Follow these 3 simple steps to start chatting and transferring files instantly.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Create Unique Identity</h3>
+          <p>Launch Linko and enter your unique username (@username). No password required! Linko instantly sets your identity and signs you in.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Connect Over Wi-Fi or Relay</h3>
+          <p>Linko automatically scans your local network for nearby peers using UDP discovery on port 53843. For long distance, connect seamlessly over E2EE relay.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Share Files, Chat & Vault</h3>
+          <p>Send files at up to 60 MB/s, send view-once self-destructing text notes, play P2P Night Tic-Tac-Toe games, and hide private notes in your 4-digit PIN Secret Vault.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Showcase -->
+    <section class="features-section">
+      <div class="section-title">
+        <h2>App Features</h2>
+        <p>Built for privacy, speed, and cross-platform communication.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-tag">LOCAL WI-FI SPEED</div>
+          <h4>Direct File Share Express</h4>
+          <p>Ultra-fast offline device-to-device file and media drops without internet dependency.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-tag">ZERO-KNOWLEDGE E2EE</div>
+          <h4>WhatsApp-Style Encrypted Chat</h4>
+          <p>End-to-end encrypted messaging with directional speech bubbles and delivery status ticks.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-tag">P2P MULTIPLAYER</div>
+          <h4>Night Game Arcade</h4>
+          <p>Live turn-based multiplayer Night Tic-Tac-Toe played directly over local socket connection.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-tag">ZERO MEMORY TRAIL</div>
+          <h4>View-Once Shredder</h4>
+          <p>Self-destructing text and photo sharing with RAM-only multi-pass byte overwrite.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-tag">UDP LAN SCANNER</div>
+          <h4>Device Discovery Radar</h4>
+          <p>LocalSend-style automatic scanner discovering online Android, Windows, and Web user accounts.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-tag">4-DIGIT PIN SAFE</div>
+          <h4>Secret Vault Safe</h4>
+          <p>Local encrypted safe to store hidden notes and passwords, protected by a 4-digit PIN.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vercel Deployment Info -->
+    <div class="deploy-box">
+      <h3>Hosting on Vercel</h3>
+      <p>Deploy the Flutter web build to Vercel for instant browser access. Build command:</p>
+      <div class="code-block">
+        flutter build web --release & npx vercel --prod
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Linko Chat & P2P Direct Share v0.2 • Cross-Platform Android, Windows & Web</p>
+    </footer>
+  </div>
+</body>
+</html>

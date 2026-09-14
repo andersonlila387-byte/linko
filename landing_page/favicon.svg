@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111118"/>
+      <stop offset="100%" stop-color="#08080C"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF"/>
+      <stop offset="100%" stop-color="#7000FF"/>
+    </linearGradient>
+    <linearGradient id="pinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF007A"/>
+      <stop offset="100%" stop-color="#00F0FF"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Outer Squircle Container -->
+  <rect x="16" y="16" width="480" height="480" rx="120" fill="url(#bgGrad)" stroke="#22222E" stroke-width="8"/>
+  
+  <!-- Ambient Neon Ring -->
+  <rect x="28" y="28" width="456" height="456" rx="108" fill="none" stroke="url(#cyanGrad)" stroke-width="4" stroke-opacity="0.4"/>
+  
+  <!-- Main "L" Node Network Logo -->
+  <g filter="url(#glow)">
+    <!-- Vertical Linko Shaft -->
+    <path d="M 160 120 L 160 360 C 160 382 178 400 200 400 L 360 400" 
+          fill="none" 
+          stroke="url(#cyanGrad)" 
+          stroke-width="44" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+          
+    <!-- Interlocking P2P Pulse Arc -->
+    <path d="M 220 180 L 340 300 M 340 300 L 260 300" 
+          fill="none" 
+          stroke="url(#pinkGrad)" 
+          stroke-width="28" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+          
+    <!-- P2P Node Glowing Connection Points -->
+    <circle cx="160" cy="120" r="26" fill="#00F0FF"/>
+    <circle cx="360" cy="400" r="26" fill="#7000FF"/>
+    <circle cx="340" cy="300" r="20" fill="#FF007A"/>
+    <circle cx="220" cy="180" r="16" fill="#00F0FF"/>
+  </g>
+</svg>
